@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"type_traits": "cpp",
+			"concepts": "cpp",
+			"cstddef": "cpp",
+			"cstdint": "cpp",
+			"cstdlib": "cpp",
+			"initializer_list": "cpp",
+			"xstddef": "cpp",
+			"xtr1common": "cpp",
+			"version": "cpp",
+			"xstring": "cpp",
+			"compare": "cpp",
+			"memory": "cpp",
+			"ratio": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp",
+			"xmemory": "cpp",
+			"xutility": "cpp"
+		},
+		"explorer.sortOrder": "type",
+		"C_Cpp.default.compileCommands": "builddir\\vscode_compile_commands.json",
+		"editor.rulers": []
+	}
+}

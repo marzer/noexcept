@@ -1,0 +1,17 @@
+<pre class='metadata'>
+Title: Type traits for manipulating <code>noexcept</code>
+Shortname: DXXXX
+Level: 0
+Status: D
+URL: https://marzer.github.io/noexcept/
+Editor: Mark Gillard, mark.gillard@outlook.com.au
+Repository: marzer/noexcept
+Abstract: C++17 made <code>noexcept</code> a part of the type system, but did not add any corresponding type traits for adding, removing and testing the presence of it. This paper seeks to close that gap.
+Markup Shorthands: css no, markdown yes
+Warning: Not Ready
+Group: wg21
+Date: now
+Audience: LEWGI 
+</pre>
+
+
