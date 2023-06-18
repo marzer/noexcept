@@ -11,8 +11,6 @@ Requires C++17.
 ```cpp
 namespace mz
 {
-    class noexcept
-    {
         // has member 'type' as T with the `noexcept` specifier added.
         //
         // references and pointers are preserved - the trait will 'look through'
@@ -54,7 +52,6 @@ namespace mz
         // (in the same vein as std::is_const / std::is_const_v, etc.)
         template <typename T>
         inline constexpr bool is_noexcept_v = is_noexcept<T>::value;
-    };
 }
 ```
 
