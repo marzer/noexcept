@@ -48,43 +48,7 @@ namespace {% namespaces::main %}
 	template <typename T>
 	inline constexpr bool is_noexcept_v = is_noexcept<T>::value;
 
-	// --------- pointer and cvref permutations -------------------------------------------------
-
-	template <typename T>
-	struct add_noexcept<T*>
-	{
-		using type = typename add_noexcept<T>::type*;
-	};
-
-	template <typename T>
-	struct remove_noexcept<T*>
-	{
-		using type = typename remove_noexcept<T>::type*;
-	};
-
-	template <typename T>
-	struct add_noexcept<T&>
-	{
-		using type = typename add_noexcept<T>::type&;
-	};
-
-	template <typename T>
-	struct remove_noexcept<T&>
-	{
-		using type = typename remove_noexcept<T>::type&;
-	};
-
-	template <typename T>
-	struct add_noexcept<T&&>
-	{
-		using type = typename add_noexcept<T>::type&&;
-	};
-
-	template <typename T>
-	struct remove_noexcept<T&&>
-	{
-		using type = typename remove_noexcept<T>::type&&;
-	};
+	// --------- cv permutations -------------------------------------------------
 
 	template <typename T>
 	struct add_noexcept<const T>

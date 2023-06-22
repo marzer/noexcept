@@ -11,47 +11,39 @@ Requires C++17.
 ```cpp
 namespace mz
 {
-        // has member 'type' as T with the `noexcept` specifier added.
-        //
-        // references and pointers are preserved - the trait will 'look through'
-        // these and apply the transformation to the base type.
-        //
-        // ::type will simply be T if T is not a function or
-        // member function pointer type (ignoring cvref/pointer).
-        template <typename T>
-        struct add_noexcept;
+	// has member 'type' as T with the `noexcept` specifier added
+	//
+	// ::type will simply be T if T is not a function or
+	// (possibly cv-qualified) member function pointer type.
+	template <typename T>
+	struct add_noexcept;
 
-        // type alias for directly unpacking add_noexcept
-        // (in the same vein as std::add_const / std::add_const_t, etc.)
-        template <typename T>
-        using add_noexcept_t = typename add_noexcept<T>::type;
+	// type alias for directly unpacking add_noexcept
+	// (in the same vein as std::add_const / std::add_const_t, etc.)
+	template <typename T>
+	using add_noexcept_t = typename add_noexcept<T>::type;
 
-        // has member 'type' as T with the `noexcept` specifier removed.
-        //
-        // references and pointers are preserved - the trait will 'look through'
-        // these and apply the transformation to the base type.
-        //
-        // ::type will simply be T if T is not a function or
-        // member function pointer type (ignoring cvref/pointer).
-        template <typename T>
-        struct remove_noexcept;
+	// has member 'type' as T with the `noexcept` specifier removed
+	//
+	// ::type will simply be T if T is not a function or
+	// (possibly cv-qualified) member function pointer type.
+	template <typename T>
+	struct remove_noexcept;
 
-        // type alias for directly unpacking remove_noexcept
-        // (in the same vein as std::remove_const / std::remove_const_t, etc.)
-        template <typename T>
-        using remove_noexcept_t = typename remove_noexcept<T>::type;
+	// type alias for directly unpacking remove_noexcept
+	// (in the same vein as std::remove_const / std::remove_const_t, etc.)
+	template <typename T>
+	using remove_noexcept_t = typename remove_noexcept<T>::type;
 
-        // has member 'value' indicating if T was noexcept.
-        //
-        // references and pointers are honoured - the trait will 'look through'
-        // these and check the base type.
-        template <typename T>
-        struct is_noexcept;
+	// has member 'value' indicating if T was a function
+	// or member function pointer type with the noexcept specifier present.
+	template <typename T>
+	struct is_noexcept;
 
-        // variable template containing the value of is_noexcept
-        // (in the same vein as std::is_const / std::is_const_v, etc.)
-        template <typename T>
-        inline constexpr bool is_noexcept_v = is_noexcept<T>::value;
+	// variable template containing the value of is_noexcept
+	// (in the same vein as std::is_const / std::is_const_v, etc.)
+	template <typename T>
+	inline constexpr bool is_noexcept_v = is_noexcept<T>::value;
 }
 ```
 

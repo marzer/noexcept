@@ -93,43 +93,7 @@ namespace mz
 	template <typename T>
 	inline constexpr bool is_noexcept_v = is_noexcept<T>::value;
 
-	// --------- pointer and cvref permutations -------------------------------------------------
-
-	template <typename T>
-	struct add_noexcept<T*>
-	{
-		using type = typename add_noexcept<T>::type*;
-	};
-
-	template <typename T>
-	struct remove_noexcept<T*>
-	{
-		using type = typename remove_noexcept<T>::type*;
-	};
-
-	template <typename T>
-	struct add_noexcept<T&>
-	{
-		using type = typename add_noexcept<T>::type&;
-	};
-
-	template <typename T>
-	struct remove_noexcept<T&>
-	{
-		using type = typename remove_noexcept<T>::type&;
-	};
-
-	template <typename T>
-	struct add_noexcept<T&&>
-	{
-		using type = typename add_noexcept<T>::type&&;
-	};
-
-	template <typename T>
-	struct remove_noexcept<T&&>
-	{
-		using type = typename remove_noexcept<T>::type&&;
-	};
+	// --------- cv permutations -------------------------------------------------
 
 	template <typename T>
 	struct add_noexcept<const T>
@@ -167,7 +131,7 @@ namespace mz
 		using type = const volatile typename remove_noexcept<T>::type;
 	};
 
-// --------- free functions -------------------------------------------------
+// --------- free functions -----------------------------------------------------------
 #if 1
 
 	#define MZ_SPECIALIZE_ADD_NOEXCEPT(...)                                                                            \
@@ -188,6 +152,11 @@ namespace mz
 		MZ_SPECIALIZE_ADD_NOEXCEPT(__VA_ARGS__);                                                                       \
 		MZ_SPECIALIZE_REMOVE_NOEXCEPT(__VA_ARGS__)
 
+	#if !defined(_WIN32)
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R(P...));
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R(P..., ...));
+	#endif // !defined(_WIN32)
+
 	#if defined(_WIN32)
 	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R __cdecl(P...));
 	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R __cdecl(P..., ...));
@@ -206,14 +175,9 @@ namespace mz
 	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R __clrcall(P...));
 	#endif // defined(_WIN32) && defined(__CLR_VER)
 
-	#if !defined(_WIN32)
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R(P...));
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R(P..., ...));
-	#endif // !defined(_WIN32)
-
 #endif
 
-// --------- member functions -------------------------------------------------
+// --------- member function pointers -------------------------------------------------
 #if 1
 
 	#undef MZ_SPECIALIZE_ADD_NOEXCEPT
@@ -231,6 +195,33 @@ namespace mz
 		{                                                                                                              \
 			using type = __VA_ARGS__;                                                                                  \
 		}
+
+	#if !defined(_WIN32)
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...));
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) &);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) &&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const&&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) volatile);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) volatile&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) volatile&&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const volatile);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const volatile&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const volatile&&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...));
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) &);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) &&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const&&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) volatile);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) volatile&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) volatile&&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const volatile);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const volatile&);
+	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const volatile&&);
+	#endif // !defined(_WIN32)
 
 	#if defined(_WIN32)
 	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (__cdecl C::*)(P...));
@@ -328,33 +319,6 @@ namespace mz
 	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (__clrcall C::*)(P...) const volatile&&);
 	#endif // defined(_WIN32) && defined(__CLR_VER)
 
-	#if !defined(_WIN32)
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...));
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) &);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) &&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const&&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) volatile);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) volatile&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) volatile&&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const volatile);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const volatile&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P...) const volatile&&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...));
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) &);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) &&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const&&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) volatile);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) volatile&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) volatile&&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const volatile);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const volatile&);
-	MZ_SPECIALIZE_ADD_REMOVE_NOEXCEPT(R (C::*)(P..., ...) const volatile&&);
-	#endif // !defined(_WIN32)
-
 #endif
 
 #undef MZ_SPECIALIZE_ADD_NOEXCEPT
@@ -365,13 +329,13 @@ namespace mz
 
 // all free and member function permutations covered in this file:
 //    R (P...)
-//    R (P...,...)
-//    R __cdecl (P...)
-//    R __cdecl (P...,...)
-//    R __clrcall (P...)
-//    R __fastcall (P...)
-//    R __stdcall (P...)
-//    R __vectorcall (P...)
+//    R (P..., ...)
+//    R __cdecl(P...)
+//    R __cdecl(P..., ...)
+//    R __clrcall(P...)
+//    R __fastcall(P...)
+//    R __stdcall(P...)
+//    R __vectorcall(P...)
 //    R (C::*)(P...)
 //    R (C::*)(P...) &
 //    R (C::*)(P...) &&
@@ -384,18 +348,18 @@ namespace mz
 //    R (C::*)(P...) volatile
 //    R (C::*)(P...) volatile &
 //    R (C::*)(P...) volatile &&
-//    R (C::*)(P...,...)
-//    R (C::*)(P...,...) &
-//    R (C::*)(P...,...) &&
-//    R (C::*)(P...,...) const
-//    R (C::*)(P...,...) const &
-//    R (C::*)(P...,...) const &&
-//    R (C::*)(P...,...) const volatile
-//    R (C::*)(P...,...) const volatile &
-//    R (C::*)(P...,...) const volatile &&
-//    R (C::*)(P...,...) volatile
-//    R (C::*)(P...,...) volatile &
-//    R (C::*)(P...,...) volatile &&
+//    R (C::*)(P..., ...)
+//    R (C::*)(P..., ...) &
+//    R (C::*)(P..., ...) &&
+//    R (C::*)(P..., ...) const
+//    R (C::*)(P..., ...) const &
+//    R (C::*)(P..., ...) const &&
+//    R (C::*)(P..., ...) const volatile
+//    R (C::*)(P..., ...) const volatile &
+//    R (C::*)(P..., ...) const volatile &&
+//    R (C::*)(P..., ...) volatile
+//    R (C::*)(P..., ...) volatile &
+//    R (C::*)(P..., ...) volatile &&
 //    R (__cdecl C::*)(P...)
 //    R (__cdecl C::*)(P...) &
 //    R (__cdecl C::*)(P...) &&
@@ -408,18 +372,18 @@ namespace mz
 //    R (__cdecl C::*)(P...) volatile
 //    R (__cdecl C::*)(P...) volatile &
 //    R (__cdecl C::*)(P...) volatile &&
-//    R (__cdecl C::*)(P...,...)
-//    R (__cdecl C::*)(P...,...) &
-//    R (__cdecl C::*)(P...,...) &&
-//    R (__cdecl C::*)(P...,...) const
-//    R (__cdecl C::*)(P...,...) const &
-//    R (__cdecl C::*)(P...,...) const &&
-//    R (__cdecl C::*)(P...,...) const volatile
-//    R (__cdecl C::*)(P...,...) const volatile &
-//    R (__cdecl C::*)(P...,...) const volatile &&
-//    R (__cdecl C::*)(P...,...) volatile
-//    R (__cdecl C::*)(P...,...) volatile &
-//    R (__cdecl C::*)(P...,...) volatile &&
+//    R (__cdecl C::*)(P..., ...)
+//    R (__cdecl C::*)(P..., ...) &
+//    R (__cdecl C::*)(P..., ...) &&
+//    R (__cdecl C::*)(P..., ...) const
+//    R (__cdecl C::*)(P..., ...) const &
+//    R (__cdecl C::*)(P..., ...) const &&
+//    R (__cdecl C::*)(P..., ...) const volatile
+//    R (__cdecl C::*)(P..., ...) const volatile &
+//    R (__cdecl C::*)(P..., ...) const volatile &&
+//    R (__cdecl C::*)(P..., ...) volatile
+//    R (__cdecl C::*)(P..., ...) volatile &
+//    R (__cdecl C::*)(P..., ...) volatile &&
 //    R (__clrcall C::*)(P...)
 //    R (__clrcall C::*)(P...) &
 //    R (__clrcall C::*)(P...) &&

@@ -22,10 +22,21 @@
 			"tuple": "cpp",
 			"utility": "cpp",
 			"xmemory": "cpp",
-			"xutility": "cpp"
+			"xutility": "cpp",
+			"algorithm": "cpp",
+			"cmath": "cpp",
+			"bit": "cpp",
+			"cstdio": "cpp",
+			"cstring": "cpp",
+			"cwchar": "cpp",
+			"exception": "cpp",
+			"limits": "cpp",
+			"new": "cpp",
+			"optional": "cpp"
 		},
 		"explorer.sortOrder": "type",
 		"C_Cpp.default.compileCommands": "builddir\\vscode_compile_commands.json",
-		"editor.rulers": []
+		"editor.rulers": [],
+		"python.formatting.provider": "yapf"
 	}
 }
